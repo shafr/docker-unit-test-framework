@@ -3,7 +3,7 @@ package com.cyberneticscore.dockertestframework;
 import com.cyberneticscore.dockertestframework.Annotations.*;
 import org.testng.annotations.Test;
 
-@DockerHost("tcp://shadm01-co7:2375")
+@DockerHost("tcp://localhost:2375")
 @Image("alpine")
 public class Test2 extends DockerAnnotationHandler {
     @Test

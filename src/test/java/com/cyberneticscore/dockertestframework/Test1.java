@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-@DockerHost("tcp://shadm01-co7:2375")
+@DockerHost("tcp:localhost:2375")
 @Image("alpine")
 @Volume(local = "Vol1", remote = "drv")
 @Volume(local = "Vol2", remote = "drv2")
