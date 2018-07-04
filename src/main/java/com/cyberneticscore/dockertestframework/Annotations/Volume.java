@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(Volumes.class)
 public @interface Volume {
-    String local() default "";
-    String remote() default "";
+    String local();
+    String remote();
 }
 

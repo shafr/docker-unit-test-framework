@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(Environments.class)
 public @interface Environment {
-    String value() default "";
+    String value();
 }
 
 
