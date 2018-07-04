@@ -1,0 +1,24 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+
+sourceSets {
+    main {
+        java.srcDir 'src/main/java'
+        resources.srcDir 'src/main/resources'
+    }
+    test {
+        java.srcDir 'src/test/java'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile('com.github.docker-java:docker-java:3.0.14')
+    testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
+    compile group: 'org.testng', name: 'testng', version: '6.14.3'
+
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.14'
+}
