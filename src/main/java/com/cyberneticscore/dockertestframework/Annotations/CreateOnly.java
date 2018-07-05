@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface DockerHost {
-    String value() default "tcp://localhost:2375";
+@Target(ElementType.METHOD)
+public @interface CreateOnly {
 }
