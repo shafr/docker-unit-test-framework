@@ -9,22 +9,26 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DockerAnnotationHandler extends DockerUtilMethods {
+public class DockerAnnotationHandler {
     private ContainerConfig classContainerConfig;
     protected DockerCommandsHandler dockerClient;
 
 
     DockerAnnotationHandler() {
         classContainerConfig = new ContainerConfig();
-        getHostPortFromAnnotation(this.getClass());
+        getHostPortFromAnnotation();
         extractImage();
-        extractEnvironmentVariables(this.getClass());
-        extactVolumes(this.getClass());
-        extractCommandLineArgument(this.getClass());
-        System.out.println("Constructor");
+        extractEnvironmentVariables();
+        extactVolumes();
+        extractCommandLineArgument();
+        extractPorts();
     }
 
-    private void getHostPortFromAnnotation(Class classs) {
+    private void extractPorts() {
+
+    }
+
+    private void getHostPortFromAnnotation() {
         if (this.getClass().isAnnotationPresent(DockerHost.class)) {
             //TODO - regex check
             String annotationHostPort = this.getClass().getAnnotation(DockerHost.class).value();
@@ -38,7 +42,7 @@ public class DockerAnnotationHandler extends DockerUtilMethods {
         }
     }
 
-    private void extactVolumes(Class classs) {
+    private void extactVolumes() {
         HashMap<String, String> volumes = new HashMap<>(0);
         //TODO - Validation of correct path?
         if (this.getClass().isAnnotationPresent(Volume.class)) {
@@ -57,7 +61,7 @@ public class DockerAnnotationHandler extends DockerUtilMethods {
         this.classContainerConfig.setVolumes(volumes);
     }
 
-    private void extractEnvironmentVariables(Class classs) {
+    private void extractEnvironmentVariables() {
         if (this.getClass().isAnnotationPresent(Environment.class)) {
             Environment annotation = this.getClass().getAnnotation(Environment.class);
             this.classContainerConfig.getEnvironmentProperties().add(annotation.value());
@@ -72,19 +76,12 @@ public class DockerAnnotationHandler extends DockerUtilMethods {
         }
     }
 
-    private void extractCommandLineArgument(Class classs) {
+    private void extractCommandLineArgument() {
         if (this.getClass().isAnnotationPresent(CommandLineArgument.class)) {
             CommandLineArgument commandLineArgument = this.getClass().getAnnotation(CommandLineArgument.class);
-            this.classContainerConfig.setCommandLineCommand(commandLineArgument.command());
-            this.classContainerConfig.setCommandLineArguments(Arrays.asList(commandLineArgument.arguments()));
+            this.classContainerConfig.setCommandLineArguments(Arrays.asList(commandLineArgument.value()));
         }
     }
-
-//    @BeforeClass
-//    public void beforeEachClass() {
-//        classContainerConfig = new ContainerConfig();
-//        System.out.println("Before Class");
-//    }
 
     @BeforeMethod
     void BeforeEachTest(Method method) {
@@ -93,16 +90,22 @@ public class DockerAnnotationHandler extends DockerUtilMethods {
         handleMethodEnvs(method, methodContainerConfig);
 
         dockerClient = new DockerCommandsHandler(methodContainerConfig);
-        dockerClient.createAndStartContainer(methodContainerConfig);
+        dockerClient.createContainer(methodContainerConfig);
+
+        if (!method.isAnnotationPresent(CreateOnly.class)) {
+            dockerClient.startContainer();
+        }
     }
 
     @AfterMethod
     void AfterEachMethod(Method method) {
-        dockerClient.stopContainer();
+        if (dockerClient.isRunning()) {
+            dockerClient.stopContainer();
+        }
 
-//        if (!method.isAnnotationPresent(KeepContainer.class)) {
-//            dockerClient.removeContainer();
-//        }
+        if (!method.isAnnotationPresent(KeepContainer.class)) {
+            dockerClient.removeContainer();
+        }
     }
 
     private void handleMethodEnvs(Method method, ContainerConfig methodContainerConfig) {

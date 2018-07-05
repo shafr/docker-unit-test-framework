@@ -12,7 +12,6 @@ public class ContainerConfig implements Cloneable{
     private String image;
     private List<String> environmentProperties = new ArrayList<>();
     private HashMap<String, String> volumes;
-    private String commandLineCommand;
     private List<String> commandLineArguments = new ArrayList<>();
 
     public ContainerConfig clone() {

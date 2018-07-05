@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
-@DockerHost("tcp:localhost:2375")
+@DockerHost("tcp:/localhost:2375")
 @Image("alpine")
 @Volume(local = "Vol1", remote = "drv")
 @Volume(local = "Vol2", remote = "drv2")
@@ -24,7 +24,7 @@ public class Test1 extends DockerAnnotationHandler {
         inspectContainerResponse.getState().getExitCode();
     }
 
-    @CommandLineArgument(command = "ps", arguments = "etc") //TODO - multi-string cool looking
+    @CommandLineArgument("etc") //TODO - multi-string cool looking
     @Test
     public void Test_2() {
         InspectContainerResponse inspectContainerResponse = dockerClient.inspectContainer();

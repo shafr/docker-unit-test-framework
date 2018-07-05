@@ -1,6 +1,6 @@
 package com.cyberneticscore.dockertestframework;
 
-public class DockerUtilMethods {
+public class DockerTest extends DockerAnnotationHandler {
     public void waitForLogString(String stringToWaitFor, int timeoutInMs) {
 
     }

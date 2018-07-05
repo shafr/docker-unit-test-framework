@@ -11,7 +11,7 @@ public class Test2 extends DockerAnnotationHandler {
 
     }
 
-    @CommandLineArgument(command = "ps", arguments = "etc") //TODO - multi-string cool looking
+    @CommandLineArgument("etc") //TODO - multi-string cool looking
     @Test
     public void Test2(){
 
