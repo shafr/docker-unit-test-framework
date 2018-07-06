@@ -10,6 +10,7 @@ import java.util.List;
 public class ContainerConfig implements Cloneable{
     private String hostPort;
     private String image;
+    private String entryPoint;
     private List<String> environmentProperties = new ArrayList<>();
     private HashMap<String, String> volumes;
     private List<String> commandLineArguments = new ArrayList<>();

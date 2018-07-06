@@ -8,9 +8,12 @@ import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Class for communicating with docker
@@ -44,12 +47,16 @@ public class DockerCommandsHandler {
         CreateContainerCmd container = dockerClient
                 .createContainerCmd(containerConfig.getImage());
 
+        if (!containerConfig.getEntryPoint().isEmpty()){
+            container.withEntrypoint(containerConfig.getEntryPoint());
+        }
+
         if (!containerConfig.getEnvironmentProperties().isEmpty()) {
-            container = container.withEnv(containerConfig.getEnvironmentProperties());
+            container.withEnv(containerConfig.getEnvironmentProperties());
         }
 
         if (!containerConfig.getCommandLineArguments().isEmpty()) {
-            container = container.withEntrypoint(containerConfig.getCommandLineArguments());
+            container.withEntrypoint(containerConfig.getCommandLineArguments());
         }
 
 //        if (!containerConfig.getVolumes().isEmpty()){
@@ -102,8 +109,8 @@ public class DockerCommandsHandler {
         return dockerClient.inspectContainerCmd(containerId).exec();
     }
 
-    public void getLogs(String containerId) {
-        LogContainerCmd logContainerCmd = dockerClient.logContainerCmd(containerId);
+    public void getLogs() {
+
     }
 
 

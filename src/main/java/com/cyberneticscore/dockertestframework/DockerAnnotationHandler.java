@@ -22,6 +22,7 @@ public class DockerAnnotationHandler {
         extactVolumes();
         extractCommandLineArgument();
         extractPorts();
+        extractEntryPoint();
     }
 
     private void extractPorts() {
@@ -80,6 +81,13 @@ public class DockerAnnotationHandler {
         if (this.getClass().isAnnotationPresent(CommandLineArgument.class)) {
             CommandLineArgument commandLineArgument = this.getClass().getAnnotation(CommandLineArgument.class);
             this.classContainerConfig.setCommandLineArguments(Arrays.asList(commandLineArgument.value()));
+        }
+    }
+
+    private void extractEntryPoint() {
+        if (this.getClass().isAnnotationPresent(EntryPoint.class)) {
+            EntryPoint commandLineArgument = this.getClass().getAnnotation(EntryPoint.class);
+            this.classContainerConfig.setEntryPoint(commandLineArgument.value());
         }
     }
 
