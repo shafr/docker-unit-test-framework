@@ -5,16 +5,17 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.DockerCmdExecFactory;
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
-
-import java.util.Arrays;
+import lombok.extern.log4j.Log4j;
 
 /**
  * Class for communicating with docker
  */
+@Log4j
 class DockerCommandsHandler {
     private DockerClient dockerClient;
 
@@ -44,7 +45,7 @@ class DockerCommandsHandler {
         CreateContainerCmd container = dockerClient
                 .createContainerCmd(containerConfig.getImage());
 
-        if (!containerConfig.getEntryPoint().isEmpty()){
+        if (!containerConfig.getEntryPoint().isEmpty()) {
             container.withEntrypoint(containerConfig.getEntryPoint());
         }
 
@@ -66,39 +67,54 @@ class DockerCommandsHandler {
 
         CreateContainerResponse exec = container.exec();
 
-
-        System.out.println(Arrays.toString(exec.getWarnings()));
+        if (null != exec.getWarnings() && exec.getWarnings().length > 0) {
+            LOGGER.warn(exec.getWarnings());
+        }
 
         this.containerId = exec.getId();
     }
 
     void startContainer() {
+        LOGGER.debug("Container Starting: " + this.containerId);
+
         dockerClient.startContainerCmd(this.containerId).exec();
     }
 
-    public Boolean isRunning() {
-        return dockerClient.inspectContainerCmd(containerId).exec().getState().getRunning();
+    Boolean isRunning() {
+
+        Boolean running = dockerClient.inspectContainerCmd(containerId).exec().getState().getRunning();
+
+        LOGGER.debug("Container isRunning? = " + running + "  :" + this.containerId);
+
+        return running;
     }
 
 
-    public void stopContainer() {
+    void stopContainer() {
         if (isRunning()) {
-            dockerClient.killContainerCmd(containerId).exec();
+            LOGGER.info("Trying to stop ID: " + containerId);
+
+            try {
+
+                dockerClient.killContainerCmd(containerId).exec();
+            } catch (ConflictException ex){
+                LOGGER.warn(ex);
+            }
         }
 
         Boolean dead = dockerClient.inspectContainerCmd(containerId).exec().getState().getDead();
 
         if (dead) {
-            System.out.println("DEAD!");
+            LOGGER.debug("Container " + containerId + " is DEAD!");
         }
 
-        System.out.println("Container is stopped!");
+        LOGGER.debug("Container " + containerId + " is stopped!");
     }
 
-    public void removeContainer() {
+    void removeContainer() {
         dockerClient.removeContainerCmd(containerId).withForce(true).exec();
 
-        System.out.println("Container is removed!");
+        LOGGER.debug("Container " + containerId + " is removed!");
     }
 
 
@@ -110,8 +126,7 @@ class DockerCommandsHandler {
 
     }
 
-    private boolean isNullOrEmpty(String str){
-        return (null==str) || (str.isEmpty());
+    public String getId() {
+        return containerId;
     }
-
 }
