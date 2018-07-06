@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Data
-public class ContainerConfig implements Cloneable{
+class ContainerConfig implements Cloneable{
     private String hostPort = "";
     private String image = "";
     private String entryPoint = "";

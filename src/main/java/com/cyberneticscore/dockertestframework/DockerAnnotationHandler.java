@@ -1,7 +1,6 @@
 package com.cyberneticscore.dockertestframework;
 
 import com.cyberneticscore.dockertestframework.Annotations.*;
-import com.cyberneticscore.dockertestframework.Annotations.Image;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -9,7 +8,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DockerAnnotationHandler {
+class DockerAnnotationHandler {
     private ContainerConfig classContainerConfig;
     protected DockerCommandsHandler dockerClient;
 

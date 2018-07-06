@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * Class for communicating with docker
  */
-public class DockerCommandsHandler {
+class DockerCommandsHandler {
     private DockerClient dockerClient;
 
     private String containerId;
@@ -110,5 +110,8 @@ public class DockerCommandsHandler {
 
     }
 
+    private boolean isNullOrEmpty(String str){
+        return (null==str) || (str.isEmpty());
+    }
 
 }
