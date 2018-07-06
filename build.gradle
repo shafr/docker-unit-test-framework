@@ -27,6 +27,10 @@ dependencies {
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.14'
 }
 
+test {
+    useTestNG()
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true
