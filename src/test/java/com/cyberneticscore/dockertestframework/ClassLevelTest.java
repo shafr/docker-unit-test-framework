@@ -1,20 +1,15 @@
 package com.cyberneticscore.dockertestframework;
 
 import com.cyberneticscore.dockertestframework.Annotations.*;
-import com.github.dockerjava.api.model.ExposedPort;
-import org.bouncycastle.util.Arrays;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-
 @DockerHost()
-@EntryPoint("/bin/someentrypoint")
+@Image("alpine")
+@EntryPoint("/bin/sh")
 @Environment("key=value")
 @Environment("key2=value2")
-@Image("alpine")
-@CommandLineArgument({"ls", "-", "ltrh"})
-
+@CommandLineArgument({"ls", "-ltrh"})
 public class ClassLevelTest extends DockerTest{
     @Test
     public void TestHost(){
@@ -22,9 +17,15 @@ public class ClassLevelTest extends DockerTest{
     }
 
     @Test
+    public void testImage(){
+        String actual = dockerClient.inspectContainer().getConfig().getImage();
+        Assert.assertEquals(actual, "alpine");
+    }
+
+    @Test
     public void testEntryPoint(){
         String[] actual = dockerClient.inspectContainer().getConfig().getEntrypoint();
-        Assert.assertEquals(actual, "");
+        Assert.assertEquals(actual[0], "/bin/sh");
     }
 
     @Test
@@ -36,14 +37,9 @@ public class ClassLevelTest extends DockerTest{
     }
 
     @Test
-    public void testImage(){
-        String actual = dockerClient.inspectContainer().getConfig().getImage();
-        Assert.assertEquals(actual, "alpine");
-    }
-
-    @Test
-    public void testPorts(){
-        ExposedPort[] actual = dockerClient.inspectContainer().getConfig().getExposedPorts();
-        Assert.assertNull(actual);
+    public void testCommandLineArguments(){
+        String[] actual = dockerClient.inspectContainer().getConfig().getCmd();
+        Assert.assertEquals(actual[0], "ls");
+        Assert.assertEquals(actual[1], "-ltrh");
     }
 }

@@ -1,19 +1,16 @@
 package com.cyberneticscore.dockertestframework;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.*;
-import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports;
-import com.github.dockerjava.api.model.Volume;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.DockerCmdExecFactory;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
-import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Class for communicating with docker
@@ -56,7 +53,7 @@ public class DockerCommandsHandler {
         }
 
         if (!containerConfig.getCommandLineArguments().isEmpty()) {
-            container.withEntrypoint(containerConfig.getCommandLineArguments());
+            container.withCmd(containerConfig.getCommandLineArguments());
         }
 
 //        if (!containerConfig.getVolumes().isEmpty()){
