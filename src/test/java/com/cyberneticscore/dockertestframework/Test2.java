@@ -1,11 +1,13 @@
 package com.cyberneticscore.dockertestframework;
 
-import com.cyberneticscore.dockertestframework.Annotations.*;
+import com.cyberneticscore.dockertestframework.Annotations.CommandLineArgument;
+import com.cyberneticscore.dockertestframework.Annotations.DockerHost;
+import com.cyberneticscore.dockertestframework.Annotations.Image;
 import org.testng.annotations.Test;
 
 @DockerHost("tcp://localhost:2375")
 @Image("alpine")
-public class Test2 extends DockerAnnotationHandler {
+public class Test2 extends DockerTest {
     @Test
     public void Test1() {
 

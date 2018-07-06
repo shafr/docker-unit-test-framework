@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 @Image("alpine")
 @Volume(local = "Vol1", remote = "drv")
 @Volume(local = "Vol2", remote = "drv2")
-public class Test1 extends DockerAnnotationHandler {
+public class Test1 extends DockerTest {
     @Environment("EM_HOST_PORT=http://tas-cz-n101:8081")
     @Environment("abc=123")
     @Test
