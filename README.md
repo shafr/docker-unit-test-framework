@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/shafr/Docker-Unit-Test-Framework.svg?branch=master)](https://travis-ci.org/shafr/Docker-Unit-Test-Framework)
+
 __Note that at this point the project is in Proof-of-concept state, so everything can/would be changed.__
 
 # Docker images testing with Java + TestNg.
@@ -28,7 +30,7 @@ public class ClassLevelTest extends DockerTest{
 
 ## Hints
 `dockerClient` field is available to you for accessing different container/host info from tests.
-
+Remember that testng's `Test` annotation has some useful annotations - for example @Timeout or InvocationTimeout.
 
 ## Annotations
 | Annotation          | Method | Class | Mandatory | Note                                                     |
@@ -41,8 +43,6 @@ public class ClassLevelTest extends DockerTest{
 | KeepContainer       | X      |       |           | Does not remove container after test (for investigation) |
 | CreateOnly          | X      |       |           | Does not start container, just create                    |
 | Volume              | X      | X     |           | Exposes volume                                           |
-| Port                |        |       |           | Exposes port                                             |
-
 
 ## Helper methods:
 This is todo at this point...
