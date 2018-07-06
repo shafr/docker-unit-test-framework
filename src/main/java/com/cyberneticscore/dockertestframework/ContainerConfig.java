@@ -8,12 +8,12 @@ import java.util.List;
 
 @Data
 public class ContainerConfig implements Cloneable{
-    private String hostPort;
-    private String image;
-    private String entryPoint;
-    private List<String> environmentProperties = new ArrayList<>();
-    private HashMap<String, String> volumes;
-    private List<String> commandLineArguments = new ArrayList<>();
+    private String hostPort = "";
+    private String image = "";
+    private String entryPoint = "";
+    private List<String> environmentProperties = new ArrayList<>(0);
+    private HashMap<String, String> volumes = new HashMap<>(0);
+    private List<String> commandLineArguments = new ArrayList<>(0);
 
     public ContainerConfig clone() {
         try {
