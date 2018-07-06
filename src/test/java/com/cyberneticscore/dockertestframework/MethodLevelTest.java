@@ -1,6 +1,6 @@
 package com.cyberneticscore.dockertestframework;
 
-import com.cyberneticscore.dockertestframework.Annotations.*;
+import com.cyberneticscore.dockertestframework.annotations.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

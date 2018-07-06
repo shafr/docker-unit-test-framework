@@ -1,6 +1,6 @@
 package com.cyberneticscore.dockertestframework;
 
-import com.cyberneticscore.dockertestframework.Annotations.*;
+import com.cyberneticscore.dockertestframework.annotations.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -20,12 +20,7 @@ class DockerAnnotationHandler {
         extractEnvironmentVariables();
         extactVolumes();
         extractCommandLineArgument();
-        extractPorts();
         extractEntryPoint();
-    }
-
-    private void extractPorts() {
-
     }
 
     private void getHostPortFromAnnotation() {
@@ -90,29 +85,6 @@ class DockerAnnotationHandler {
         }
     }
 
-    @BeforeMethod
-    void BeforeEachTest(Method method) {
-        ContainerConfig methodContainerConfig = handleMethodAttributes(method, classContainerConfig);
-
-        dockerClient = new DockerController(methodContainerConfig);
-        dockerClient.createContainer(methodContainerConfig);
-
-        if (!method.isAnnotationPresent(CreateOnly.class)) {
-            dockerClient.startContainer();
-        }
-    }
-
-    @AfterMethod
-    void AfterEachMethod(Method method) {
-        if (dockerClient.isRunning()) {
-            dockerClient.stopContainer();
-        }
-
-        if (!method.isAnnotationPresent(KeepContainer.class)) {
-            dockerClient.removeContainer();
-        }
-    }
-
     private ContainerConfig handleMethodAttributes(Method method, ContainerConfig classContainerConfig) {
         ContainerConfig methodContainerConfg = classContainerConfig.clone();
 
@@ -140,5 +112,28 @@ class DockerAnnotationHandler {
         }
 
         return methodContainerConfg;
+    }
+
+    @BeforeMethod
+    void BeforeEachTest(Method method) {
+        ContainerConfig methodContainerConfig = handleMethodAttributes(method, classContainerConfig);
+
+        dockerClient = new DockerController(methodContainerConfig);
+        dockerClient.createContainer(methodContainerConfig);
+
+        if (!method.isAnnotationPresent(CreateOnly.class)) {
+            dockerClient.startContainer();
+        }
+    }
+
+    @AfterMethod
+    void AfterEachMethod(Method method) {
+        if (dockerClient.isRunning()) {
+            dockerClient.stopContainer();
+        }
+
+        if (!method.isAnnotationPresent(KeepContainer.class)) {
+            dockerClient.removeContainer();
+        }
     }
 }

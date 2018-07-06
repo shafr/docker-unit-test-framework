@@ -1,4 +1,4 @@
-package com.cyberneticscore.dockertestframework.Annotations;
+package com.cyberneticscore.dockertestframework.annotations;
 
 import java.lang.annotation.*;
 
