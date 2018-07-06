@@ -12,7 +12,7 @@ addons:
 services:
   - docker
 script:
-  - ./gradlew check
-  - ./gradlew codeCoverageReport
+  - gradle check
+  - gradle codeCoverageReport
 after_success:
   - bash <(curl -s https://codecov.io/bash)
