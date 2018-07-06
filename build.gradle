@@ -24,7 +24,7 @@ dependencies {
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.14'
 }
 
-codeCoverageReport {
+jacocoTestReport {
     reports {
         xml.enabled true
         html.enabled false
