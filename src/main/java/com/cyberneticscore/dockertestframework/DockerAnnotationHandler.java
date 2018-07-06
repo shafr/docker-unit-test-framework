@@ -92,9 +92,7 @@ class DockerAnnotationHandler {
 
     @BeforeMethod
     void BeforeEachTest(Method method) {
-        ContainerConfig methodContainerConfig = classContainerConfig.clone();
-
-        handleMethodAttributes(method, methodContainerConfig);
+        ContainerConfig methodContainerConfig = handleMethodAttributes(method, classContainerConfig);
 
         dockerClient = new DockerController(methodContainerConfig);
         dockerClient.createContainer(methodContainerConfig);
@@ -115,28 +113,32 @@ class DockerAnnotationHandler {
         }
     }
 
-    private void handleMethodAttributes(Method method, ContainerConfig methodContainerConfig) {
+    private ContainerConfig handleMethodAttributes(Method method, ContainerConfig classContainerConfig) {
+        ContainerConfig methodContainerConfg = classContainerConfig.clone();
+
         if (method.isAnnotationPresent(Environment.class)) {
             Environment annotation = method.getAnnotation(Environment.class);
-            methodContainerConfig.getEnvironmentProperties().add(annotation.value());
+            methodContainerConfg.getEnvironmentProperties().add(annotation.value());
         }
 
         if (method.isAnnotationPresent(Environments.class)) {
             Environments annotations = method.getAnnotation(Environments.class);
 
             for (Environment annotation : annotations.value()) {
-                methodContainerConfig.getEnvironmentProperties().add(annotation.value());
+                methodContainerConfg.getEnvironmentProperties().add(annotation.value());
             }
         }
 
         if (method.isAnnotationPresent(CommandLineArgument.class)) {
             CommandLineArgument commandLineArgument = method.getAnnotation(CommandLineArgument.class);
-            methodContainerConfig.setCommandLineArguments(Arrays.asList(commandLineArgument.value()));
+            methodContainerConfg.setCommandLineArguments(Arrays.asList(commandLineArgument.value()));
         }
 
         if (method.isAnnotationPresent(EntryPoint.class)) {
             EntryPoint commandLineArgument = method.getAnnotation(EntryPoint.class);
-            methodContainerConfig.setEntryPoint(commandLineArgument.value());
+            methodContainerConfg.setEntryPoint(commandLineArgument.value());
         }
+
+        return methodContainerConfg;
     }
 }

@@ -16,12 +16,15 @@ class ContainerConfig implements Cloneable{
     private List<String> commandLineArguments = new ArrayList<>(0);
 
     public ContainerConfig clone() {
-        try {
-            return (ContainerConfig)super.clone();
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-        }
 
-        return null; //TODO - proper cloning
+       ContainerConfig containerConfig = new ContainerConfig();
+       containerConfig.hostPort = this.hostPort;
+       containerConfig.image = this.image;
+       containerConfig.entryPoint = this.entryPoint;
+       containerConfig.environmentProperties.addAll(this.environmentProperties);
+       containerConfig.volumes.putAll(this.volumes);
+       containerConfig.commandLineArguments.addAll(this.commandLineArguments);
+
+       return containerConfig;
     }
 }
