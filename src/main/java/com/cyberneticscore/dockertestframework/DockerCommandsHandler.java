@@ -30,10 +30,10 @@ class DockerCommandsHandler {
                 .build();
 
         DockerCmdExecFactory dockerCmdExecFactory = new JerseyDockerCmdExecFactory()
-                .withReadTimeout(1000)
-                .withConnectTimeout(1000)
+                .withReadTimeout(10_000)
+                .withConnectTimeout(10_000)
                 .withMaxTotalConnections(100)
-                .withMaxPerRouteConnections(10);
+                .withMaxPerRouteConnections(100);
 
         dockerClient = DockerClientBuilder.getInstance(config)
                 .withDockerCmdExecFactory(dockerCmdExecFactory)
