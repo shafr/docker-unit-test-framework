@@ -8,14 +8,22 @@ import org.testng.annotations.Test;
 @Image("alpine")
 public class MethodLevelTest extends DockerTest{
 
-    @CommandLineArgument({"ls", "-ltrh"})
     @Test()
-    public void TestCommandLineArgument(){
-        dockerClient.getLogs();
+    @CommandLineArgument({"ls", "-ltrh"})
+    public void testCommandLineArgument(){
+        String[] actual = dockerClient.inspectContainer().getConfig().getCmd();
+        Assert.assertEquals(actual[0], "ls");
+        Assert.assertEquals(actual[1], "-ltrh");
     }
 
     @Test
     @EntryPoint("/bin/sh")
+    public void testEntryPoint(){
+        String[] actual = dockerClient.inspectContainer().getConfig().getEntrypoint();
+        Assert.assertEquals(actual[0], "/bin/sh");
+    }
+
+    @Test
     @Environment("key=value")
     @Environment("key2=value2")
     public void testEnvironment(){
