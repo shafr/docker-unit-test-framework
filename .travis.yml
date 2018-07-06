@@ -11,8 +11,6 @@ addons:
       - oracle-java8-set-default
 services:
   - docker
-before_script:
-  - git pull alpine
 script:
   - ./gradlew check
   - ./gradlew codeCoverageReport
