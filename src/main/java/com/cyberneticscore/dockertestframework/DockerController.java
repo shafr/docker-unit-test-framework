@@ -16,12 +16,12 @@ import lombok.extern.log4j.Log4j;
  * Class for communicating with docker
  */
 @Log4j
-class DockerCommandsHandler {
+class DockerController {
     private DockerClient dockerClient;
 
     private String containerId;
 
-    public DockerCommandsHandler(ContainerConfig containerConfig) {
+    public DockerController(ContainerConfig containerConfig) {
         init(containerConfig);
     }
 
@@ -97,7 +97,7 @@ class DockerCommandsHandler {
             try {
 
                 dockerClient.killContainerCmd(containerId).exec();
-            } catch (ConflictException ex){
+            } catch (ConflictException ex) {
                 LOGGER.warn(ex);
             }
         }

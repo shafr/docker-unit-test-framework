@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 class DockerAnnotationHandler {
     private ContainerConfig classContainerConfig;
-    protected DockerCommandsHandler dockerClient;
+    protected DockerController dockerClient;
 
 
     DockerAnnotationHandler() {
@@ -94,9 +94,9 @@ class DockerAnnotationHandler {
     void BeforeEachTest(Method method) {
         ContainerConfig methodContainerConfig = classContainerConfig.clone();
 
-        handleMethodEnvs(method, methodContainerConfig);
+        handleMethodAttributes(method, methodContainerConfig);
 
-        dockerClient = new DockerCommandsHandler(methodContainerConfig);
+        dockerClient = new DockerController(methodContainerConfig);
         dockerClient.createContainer(methodContainerConfig);
 
         if (!method.isAnnotationPresent(CreateOnly.class)) {
@@ -115,7 +115,7 @@ class DockerAnnotationHandler {
         }
     }
 
-    private void handleMethodEnvs(Method method, ContainerConfig methodContainerConfig) {
+    private void handleMethodAttributes(Method method, ContainerConfig methodContainerConfig) {
         if (method.isAnnotationPresent(Environment.class)) {
             Environment annotation = method.getAnnotation(Environment.class);
             methodContainerConfig.getEnvironmentProperties().add(annotation.value());
@@ -127,6 +127,16 @@ class DockerAnnotationHandler {
             for (Environment annotation : annotations.value()) {
                 methodContainerConfig.getEnvironmentProperties().add(annotation.value());
             }
+        }
+
+        if (method.isAnnotationPresent(CommandLineArgument.class)) {
+            CommandLineArgument commandLineArgument = method.getAnnotation(CommandLineArgument.class);
+            methodContainerConfig.setCommandLineArguments(Arrays.asList(commandLineArgument.value()));
+        }
+
+        if (method.isAnnotationPresent(EntryPoint.class)) {
+            EntryPoint commandLineArgument = method.getAnnotation(EntryPoint.class);
+            methodContainerConfig.setEntryPoint(commandLineArgument.value());
         }
     }
 }
