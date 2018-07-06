@@ -115,7 +115,7 @@ class DockerAnnotationHandler {
     }
 
     @BeforeMethod
-    void BeforeEachTest(Method method) {
+    void beforeEachTest(Method method) {
         ContainerConfig methodContainerConfig = handleMethodAttributes(method, classContainerConfig);
 
         dockerClient = new DockerController(methodContainerConfig);
@@ -127,7 +127,7 @@ class DockerAnnotationHandler {
     }
 
     @AfterMethod
-    void AfterEachMethod(Method method) {
+    void afterEachTest(Method method) {
         if (dockerClient.isRunning()) {
             dockerClient.stopContainer();
         }

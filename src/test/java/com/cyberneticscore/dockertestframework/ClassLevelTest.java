@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 @CommandLineArgument({"ls", "-ltrh"})
 public class ClassLevelTest extends DockerTest{
     @Test
-    public void TestHost(){
+    public void tstHost(){
         //I haven't found how to check which host you are connected to - if it would fail, other tests would not start.
     }
 
