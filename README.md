@@ -9,7 +9,7 @@ __Note that at this point the project is in Proof-of-concept state, so everythin
 # Docker images testing with Java + TestNg.
 `TLDR: This is merely wrapper around [Docker java plugin][docker-java] & TestNg Basic attributes.`
 
-I was looking for any solution on how to test my Docker images (mostly for application servers), but i was not able to find one.
+I was looking for any solution on how to test my Docker images (mostly for application servers), but I was not able to find one.
 
 The Idea behind this tool - is to give you opportunity to test Docker images `as a Unit tests`, where you can specify CommandLine Arguments, Env. properties, etc per-test.
 
@@ -23,7 +23,10 @@ The Idea behind this tool - is to give you opportunity to test Docker images `as
 | CommandLineArgument | X      | X     |           | Array from command and arguments                         |
 | KeepContainer       | X      |       |           | Does not remove container after test (for investigation) |
 | ~~Volume~~          | X      | X     |           | TBD                                                      |
-| ~~Port  ~~          | X      | X     |           | TBD                                                      |
+| ~~Port~~            | X      | X     |           | TBD                                                      |
+
+## Compatibility
+See [Docker-java][docker-java] compatibility list. Personally for me works on both Windows10 + LinunxCe and Windows10 + 
 
 ## Helper methods:
 | Method                                          | Description                             |
@@ -36,9 +39,11 @@ The Idea behind this tool - is to give you opportunity to test Docker images `as
 See [Annotation tests][test-cases-link] for examples.
 
 ## Hints
-`dockerClient` field is available to you for accessing different container/host info from tests. 
+* `dockerClient` field is available to you for accessing different container/host info from tests. 
 
-Remember that testng's `Test` annotation has some useful annotations - for example @Timeout or InvocationTimeout.
+* Remember that testng's `Test` annotation has some useful annotations - for example @Timeout or InvocationTimeout.
+
+* If you are working on Windows - remember that you can delegate images handling to any Docker-compatible Linux machine (By setting `DockerHost` env property ).
 
 [java-api-wiki]: https://github.com/docker-java/docker-java/wiki
 [docker-java]: https://github.com/docker-java/docker-java
