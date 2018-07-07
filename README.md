@@ -11,30 +11,19 @@ __Note that at this point the project is in Proof-of-concept state, so everythin
 
 The Idea behind is that you can use Annotations on Class or Methods to set different Docker parameters - Environment properties, configure Volumes, etc.
 
-This would allow testing behaviour of Docker images with different ENV properties, startup arguments, or checking contents of docker image by executing different container commands.
+This would allow testing behaviour of Docker images with different ENV properties, 
+
+startup arguments, or checking contents of docker image by executing different container commands.
+
+This is merely wrapper around [Docker java plugin][docker-java] & TestNg Basic attributes.
+
 
 ## How to Use / Examples of attributes:
-```java
-@DockerHost("someHost")
-@EntryPoint("/bin/someentrypoint")
-@Environment("key=value")
-@Environment("key2=value2")
-@Image("imageName")
-@Volume(local = "local", remote = "remote")
-@Volume(local = "local2", remote = "remote2")
-
-public class ClassLevelTest extends DockerTest{
-
-    @Test
-    public void TestHost(){
-        
-    }
-}
-
-```
+See [Annotation tests][test-cases-link] for examples.
 
 ## Hints
-`dockerClient` field is available to you for accessing different container/host info from tests.
+`dockerClient` field is available to you for accessing different container/host info from tests. 
+
 Remember that testng's `Test` annotation has some useful annotations - for example @Timeout or InvocationTimeout.
 
 ## Annotations
@@ -46,7 +35,16 @@ Remember that testng's `Test` annotation has some useful annotations - for examp
 | Environment         | X      | X     |           | One or more attributes allowded, format `"key=value"``   |
 | CommandLineArgument | X      | X     |           | Array from command and arguments                         |
 | KeepContainer       | X      |       |           | Does not remove container after test (for investigation) |
-| Volume              | X      | X     |           | Exposes volume                                           |
+| ~~Volume~~          | X      | X     |           | Exposes volume                                           |
 
 ## Helper methods:
-This is todo at this point...
+| Method                                          | Description                             |
+| ----------------------------------------------- | --------------------------------------- |
+| String getLog(int timeoutInMs)                  | returns log before timeout occurs       |
+| boolean waitForContainerToExit(int timeoutInMs) | retuns true if container is not running |
+| int getExitCode(int timeoutInMs)                | returns exit code                       |
+
+
+[java-api-wiki]: https://github.com/docker-java/docker-java/wiki
+[docker-java]: https://github.com/docker-java/docker-java
+[test-cases-link]: https://github.com/shafr/Docker-Unit-Test-Framework/tree/master/src/test/java/com/cyberneticscore/dockertestframework
