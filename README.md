@@ -15,7 +15,7 @@ This would allow testing behaviour of Docker images with different ENV propertie
 
 startup arguments, or checking contents of docker image by executing different container commands.
 
-This is merely wrapper around [Docker java plugin][docker-java] & TestNg Basic attributes.
+`TLDR: This is merely wrapper around [Docker java plugin][docker-java] & TestNg Basic attributes.`
 
 
 ## How to Use / Examples of attributes:
@@ -35,7 +35,8 @@ Remember that testng's `Test` annotation has some useful annotations - for examp
 | Environment         | X      | X     |           | One or more attributes allowded, format `"key=value"``   |
 | CommandLineArgument | X      | X     |           | Array from command and arguments                         |
 | KeepContainer       | X      |       |           | Does not remove container after test (for investigation) |
-| ~~Volume~~          | X      | X     |           | Exposes volume                                           |
+| ~~Volume~~          | X      | X     |           | TBD                                                      |
+| ~~Port  ~~          | X      | X     |           | TBD                                                      |
 
 ## Helper methods:
 | Method                                          | Description                             |
