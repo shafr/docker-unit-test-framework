@@ -18,19 +18,19 @@ public class ClassLevelTest extends DockerTest{
 
     @Test
     public void testImage(){
-        String actual = dockerClient.inspectContainer().getConfig().getImage();
+        String actual = dockerController.inspectContainer().getConfig().getImage();
         Assert.assertEquals(actual, "alpine");
     }
 
     @Test
     public void testEntryPoint(){
-        String[] actual = dockerClient.inspectContainer().getConfig().getEntrypoint();
+        String[] actual = dockerController.inspectContainer().getConfig().getEntrypoint();
         Assert.assertEquals(actual[0], "/bin/sh");
     }
 
     @Test
     public void testEnvironment(){
-        String[] actual = dockerClient.inspectContainer().getConfig().getEnv();
+        String[] actual = dockerController.inspectContainer().getConfig().getEnv();
         Assert.assertEquals(actual[0], "key=value");
         Assert.assertEquals(actual[1], "key2=value2");
         Assert.assertEquals(actual[2], "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
@@ -38,7 +38,7 @@ public class ClassLevelTest extends DockerTest{
 
     @Test
     public void testCommandLineArguments(){
-        String[] actual = dockerClient.inspectContainer().getConfig().getCmd();
+        String[] actual = dockerController.inspectContainer().getConfig().getCmd();
         Assert.assertEquals(actual[0], "ls");
         Assert.assertEquals(actual[1], "-ltrh");
     }

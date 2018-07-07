@@ -10,8 +10,7 @@ import java.util.HashMap;
 
 class DockerAnnotationHandler {
     private ContainerConfig classContainerConfig;
-    protected DockerController dockerClient;
-
+    protected DockerController dockerController;
 
     DockerAnnotationHandler() {
         classContainerConfig = new ContainerConfig();
@@ -118,22 +117,22 @@ class DockerAnnotationHandler {
     void beforeEachTest(Method method) {
         ContainerConfig methodContainerConfig = handleMethodAttributes(method, classContainerConfig);
 
-        dockerClient = new DockerController(methodContainerConfig);
-        dockerClient.createContainer(methodContainerConfig);
+        dockerController = new DockerController(methodContainerConfig);
+        dockerController.createContainer(methodContainerConfig);
 
         if (!method.isAnnotationPresent(CreateOnly.class)) {
-            dockerClient.startContainer();
+            dockerController.startContainer();
         }
     }
 
     @AfterMethod
     void afterEachTest(Method method) {
-        if (dockerClient.isRunning()) {
-            dockerClient.stopContainer();
+        if (dockerController.isRunning()) {
+            dockerController.stopContainer();
         }
 
         if (!method.isAnnotationPresent(KeepContainer.class)) {
-            dockerClient.removeContainer();
+            dockerController.removeContainer();
         }
     }
 }

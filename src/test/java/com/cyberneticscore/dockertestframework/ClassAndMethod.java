@@ -15,7 +15,7 @@ public class ClassAndMethod extends DockerTest{
     @Test()
     @CommandLineArgument({"ls", "-la"})
     public void testCommandLineArgument(){
-        String[] actual = dockerClient.inspectContainer().getConfig().getCmd();
+        String[] actual = dockerController.inspectContainer().getConfig().getCmd();
         Assert.assertEquals(actual[0], "ls");
         Assert.assertEquals(actual[1], "-la");
     }
@@ -23,7 +23,7 @@ public class ClassAndMethod extends DockerTest{
     @Test
     @EntryPoint("/bin/ls")
     public void testEntryPoint(){
-        String[] actual = dockerClient.inspectContainer().getConfig().getEntrypoint();
+        String[] actual = dockerController.inspectContainer().getConfig().getEntrypoint();
         Assert.assertEquals(actual[0], "/bin/ls");
     }
 
@@ -31,7 +31,7 @@ public class ClassAndMethod extends DockerTest{
     @Environment("key3=value3")
     @Environment("key4=value4")
     public void testEnvironment(){
-        String[] actual = dockerClient.inspectContainer().getConfig().getEnv();
+        String[] actual = dockerController.inspectContainer().getConfig().getEnv();
         Assert.assertEquals(actual[0], "key=value");
         Assert.assertEquals(actual[1], "key2=value2");
         Assert.assertEquals(actual[2], "key3=value3");
@@ -42,7 +42,7 @@ public class ClassAndMethod extends DockerTest{
     @Test
     @Environment("key2=value6")
     public void testEnvironmentOverridesPrevious(){
-        String[] actual = dockerClient.inspectContainer().getConfig().getEnv();
+        String[] actual = dockerController.inspectContainer().getConfig().getEnv();
         Assert.assertEquals(actual[0], "key=value");
         Assert.assertEquals(actual[1], "key2=value2");
         Assert.assertEquals(actual[2], "key2=value6"); //This is odd though, maybe we should handle this
@@ -52,7 +52,7 @@ public class ClassAndMethod extends DockerTest{
 
     @Test
     public void testImage(){
-        String actual = dockerClient.inspectContainer().getConfig().getImage();
+        String actual = dockerController.inspectContainer().getConfig().getImage();
         Assert.assertEquals(actual, "alpine");
     }
 }

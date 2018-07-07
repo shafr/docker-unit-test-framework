@@ -17,7 +17,7 @@ import lombok.extern.log4j.Log4j;
  */
 @Log4j
 class DockerController {
-    private DockerClient dockerClient;
+    protected DockerClient dockerClient;
 
     private String containerId;
 
@@ -122,11 +122,10 @@ class DockerController {
         return dockerClient.inspectContainerCmd(containerId).exec();
     }
 
-    public void getLogs() {
-
-    }
-
-    public String getId() {
+    public String getContainerId() {
         return containerId;
     }
+
+
+
 }
