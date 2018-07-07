@@ -7,23 +7,11 @@
 __Note that at this point the project is in Proof-of-concept state, so everything can/would be changed.__
 
 # Docker images testing with Java + TestNg.
-
-The Idea behind is that you can use Annotations on Class or Methods to set different Docker parameters - Environment properties, configure Volumes, etc.
-
-This would allow testing behaviour of Docker images with different ENV properties, 
-
-startup arguments, or checking contents of docker image by executing different container commands.
-
 `TLDR: This is merely wrapper around [Docker java plugin][docker-java] & TestNg Basic attributes.`
 
+I was looking for any solution on how to test my Docker images (mostly for application servers), but i was not able to find one.
 
-## How to Use / Examples of attributes:
-See [Annotation tests][test-cases-link] for examples.
-
-## Hints
-`dockerClient` field is available to you for accessing different container/host info from tests. 
-
-Remember that testng's `Test` annotation has some useful annotations - for example @Timeout or InvocationTimeout.
+The Idea behind this tool - is to give you opportunity to test Docker images `as a Unit tests`, where you can specify CommandLine Arguments, Env. properties, etc per-test.
 
 ## Annotations
 | Annotation          | Method | Class | Mandatory | Note                                                     |
@@ -44,6 +32,13 @@ Remember that testng's `Test` annotation has some useful annotations - for examp
 | boolean waitForContainerToExit(int timeoutInMs) | retuns true if container is not running |
 | int getExitCode(int timeoutInMs)                | returns exit code                       |
 
+## How to Use / Examples of attributes:
+See [Annotation tests][test-cases-link] for examples.
+
+## Hints
+`dockerClient` field is available to you for accessing different container/host info from tests. 
+
+Remember that testng's `Test` annotation has some useful annotations - for example @Timeout or InvocationTimeout.
 
 [java-api-wiki]: https://github.com/docker-java/docker-java/wiki
 [docker-java]: https://github.com/docker-java/docker-java
