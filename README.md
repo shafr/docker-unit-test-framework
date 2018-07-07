@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.org/shafr/Docker-Unit-Test-Framework.svg?branch=master)](https://travis-ci.org/shafr/Docker-Unit-Test-Framework)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/shafr/Docker-Unit-Test-Framework/blob/master/LICENSE.md)
 [![Analytics](https://ga-beacon.appspot.com/UA-121934843-1/Docker-Unit-Test-Framework)](https://github.com/shafr/Docker-Unit-Test-Framework)
-[![codecov](https://codecov.io/gh/shafr/Docker-Unit-Test-Framework/branch/master/graph/badge.svg)](https://codecov.io/gh/shafr/Docker-Unit-Test-Framework)
 [![Codacy Quality](https://api.codacy.com/project/badge/Grade/5ab3407c0ae149fda98c1fc360fe7d7b)](https://www.codacy.com/app/shafr/Docker-Unit-Test-Framework?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=shafr/Docker-Unit-Test-Framework&amp;utm_campaign=Badge_Grade)
 [![Codacy Coverage](https://api.codacy.com/project/badge/Coverage/5ab3407c0ae149fda98c1fc360fe7d7b)](https://www.codacy.com/app/shafr/Docker-Unit-Test-Framework?utm_source=github.com&utm_medium=referral&utm_content=shafr/Docker-Unit-Test-Framework&utm_campaign=Badge_Coverage)
 
