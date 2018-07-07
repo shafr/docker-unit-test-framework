@@ -7,7 +7,7 @@
 __Note that at this point the project is in Proof-of-concept state, so everything can/would be changed.__
 
 # Docker images testing with Java + TestNg.
-`TLDR: This is merely wrapper around [Docker java plugin][docker-java] & TestNg Basic attributes.`
+__TLDR: This is merely wrapper around [Docker java plugin][docker-java]` & TestNg Basic attributes.__
 
 I was looking for any solution on how to test my Docker images (mostly for application servers), but I was not able to find one.
 
