@@ -7,7 +7,7 @@
 __Note that at this point the project is in Proof-of-concept state, so everything can/would be changed.__
 
 # Docker images testing with Java + TestNg.
-__TLDR: This is merely wrapper around [Docker java plugin][docker-java]` & TestNg Basic attributes.__
+__TLDR: This is merely wrapper around [Docker java plugin][docker-java] & TestNg Basic attributes.__
 
 I was looking for any solution on how to test my Docker images (mostly for application servers), but I was not able to find one.
 
@@ -26,7 +26,7 @@ The Idea behind this tool - is to give you opportunity to test Docker images `as
 | ~~Port~~            | X      | X     |           | TBD                                                      |
 
 ## Compatibility
-See [Docker-java][docker-java] compatibility list. Personally for me works on both Windows10 + LinunxCe and Windows10 + 
+See [Docker-java][docker-java] compatibility list. Personally for me works on both Windows10 + LinunxCe and Windows10 + Remote CentOs machine.
 
 ## Helper methods:
 | Method                                          | Description                             |
