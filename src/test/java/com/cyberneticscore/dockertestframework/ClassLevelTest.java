@@ -4,7 +4,7 @@ import com.cyberneticscore.dockertestframework.annotations.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-@DockerHost("http://192.168.189.132:2375")
+@DockerHost()
 @Image("alpine")
 @EntryPoint("/bin/sh")
 @Environment("key=value")
