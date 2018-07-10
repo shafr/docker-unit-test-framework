@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface DockerHost {
-    String value() default "tcp://localhost:2375";
+    String value() default "http://localhost:2375";
 }

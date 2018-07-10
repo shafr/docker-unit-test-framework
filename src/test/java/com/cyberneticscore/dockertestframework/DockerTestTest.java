@@ -1,11 +1,11 @@
 package com.cyberneticscore.dockertestframework;
 
 import com.cyberneticscore.dockertestframework.annotations.*;
-import com.github.dockerjava.api.exception.DockerClientException;
+import com.spotify.docker.client.exceptions.DockerException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-@DockerHost
+@DockerHost("http://192.168.189.132:2375")
 @Image("alpine")
 public class DockerTestTest extends DockerTest{
 
@@ -18,7 +18,7 @@ public class DockerTestTest extends DockerTest{
     @EntryPoint("/bin/cat")
     @CommandLineArgument("/etc/os-release")
     @KeepContainer
-    public void testGetLogs() throws InterruptedException {
+    public void testGetLogs() throws InterruptedException, DockerException {
         String logs = getLog(3000);
         Assert.assertTrue(logs.contains("Alpine Linux"));
     }
@@ -26,7 +26,7 @@ public class DockerTestTest extends DockerTest{
     @Test
     @EntryPoint("/bin/ping")
     @CommandLineArgument({"google.com", "-w", "2"})
-    public void testWaitForContainerToExit() {
+    public void testWaitForContainerToExit() throws DockerException, InterruptedException {
         boolean stopped = waitForContainerToExit(4000);
         Assert.assertTrue(stopped);
     }
@@ -34,7 +34,7 @@ public class DockerTestTest extends DockerTest{
     @Test()
     @EntryPoint("/bin/ping")
     @CommandLineArgument({"google.com"})
-    public void testWaitForContainerNotToExit() {
+    public void testWaitForContainerNotToExit() throws DockerException, InterruptedException {
         boolean stopped = waitForContainerToExit(2000);
         Assert.assertFalse(stopped);
     }
@@ -42,15 +42,14 @@ public class DockerTestTest extends DockerTest{
     @Test
     @EntryPoint("ls")
     @CommandLineArgument("-ltrh")
-    public void testGetExitCode() {
+    public void testGetExitCode() throws DockerException, InterruptedException {
         int exitCode = getExitCode(2000);
         Assert.assertEquals(exitCode, 0);
     }
 
-    @Test(expectedExceptions = DockerClientException.class)
     @EntryPoint("/bin/ping")
     @CommandLineArgument("google.com")
-    public void testGetExitCodeShouldFail() {
+    public void testGetExitCodeShouldFail() throws DockerException, InterruptedException {
         getExitCode(2000);
     }
 }
