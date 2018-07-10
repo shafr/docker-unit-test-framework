@@ -1,6 +1,7 @@
 package com.cyberneticscore.dockertestframework;
 
 import com.cyberneticscore.dockertestframework.annotations.*;
+import com.spotify.docker.client.exceptions.DockerException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -9,11 +10,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 class DockerAnnotationHandler {
-    private ContainerConfig classContainerConfig;
+    private DockerContainerConfig classDockerContainerConfig;
     protected DockerController dockerController;
 
     DockerAnnotationHandler() {
-        classContainerConfig = new ContainerConfig();
+        classDockerContainerConfig = new DockerContainerConfig();
         getHostPortFromAnnotation();
         extractImage();
         extractEnvironmentVariables();
@@ -26,13 +27,13 @@ class DockerAnnotationHandler {
         if (this.getClass().isAnnotationPresent(DockerHost.class)) {
             //TODO - regex check
             String annotationHostPort = this.getClass().getAnnotation(DockerHost.class).value();
-            this.classContainerConfig.setHostPort(annotationHostPort);
+            this.classDockerContainerConfig.setHostPort(annotationHostPort);
         }
     }
 
     private void extractImage() {
         if (this.getClass().isAnnotationPresent(Image.class)) {
-            this.classContainerConfig.setImage(this.getClass().getAnnotation(Image.class).value());
+            this.classDockerContainerConfig.setImage(this.getClass().getAnnotation(Image.class).value());
         }
     }
 
@@ -52,20 +53,20 @@ class DockerAnnotationHandler {
             }
         }
 
-        this.classContainerConfig.setVolumes(volumes);
+        this.classDockerContainerConfig.setVolumes(volumes);
     }
 
     private void extractEnvironmentVariables() {
         if (this.getClass().isAnnotationPresent(Environment.class)) {
             Environment annotation = this.getClass().getAnnotation(Environment.class);
-            this.classContainerConfig.getEnvironmentProperties().add(annotation.value());
+            this.classDockerContainerConfig.getEnvironmentProperties().add(annotation.value());
         }
 
         if (this.getClass().isAnnotationPresent(Environments.class)) {
             Environments annotations = this.getClass().getAnnotation(Environments.class);
 
             for (Environment annotation : annotations.value()) {
-                this.classContainerConfig.getEnvironmentProperties().add(annotation.value());
+                this.classDockerContainerConfig.getEnvironmentProperties().add(annotation.value());
             }
         }
     }
@@ -73,19 +74,19 @@ class DockerAnnotationHandler {
     private void extractCommandLineArgument() {
         if (this.getClass().isAnnotationPresent(CommandLineArgument.class)) {
             CommandLineArgument commandLineArgument = this.getClass().getAnnotation(CommandLineArgument.class);
-            this.classContainerConfig.setCommandLineArguments(Arrays.asList(commandLineArgument.value()));
+            this.classDockerContainerConfig.setCommandLineArguments(Arrays.asList(commandLineArgument.value()));
         }
     }
 
     private void extractEntryPoint() {
         if (this.getClass().isAnnotationPresent(EntryPoint.class)) {
             EntryPoint commandLineArgument = this.getClass().getAnnotation(EntryPoint.class);
-            this.classContainerConfig.setEntryPoint(commandLineArgument.value());
+            this.classDockerContainerConfig.setEntryPoint(commandLineArgument.value());
         }
     }
 
-    private ContainerConfig handleMethodAttributes(Method method, ContainerConfig classContainerConfig) {
-        ContainerConfig methodContainerConfg = classContainerConfig.clone();
+    private DockerContainerConfig handleMethodAttributes(Method method, DockerContainerConfig classDockerContainerConfig) {
+        DockerContainerConfig methodContainerConfg = classDockerContainerConfig.clone();
 
         if (method.isAnnotationPresent(Environment.class)) {
             Environment annotation = method.getAnnotation(Environment.class);
@@ -114,11 +115,11 @@ class DockerAnnotationHandler {
     }
 
     @BeforeMethod
-    void beforeEachTest(Method method) {
-        ContainerConfig methodContainerConfig = handleMethodAttributes(method, classContainerConfig);
+    void beforeEachTest(Method method) throws DockerException, InterruptedException {
+        DockerContainerConfig methodDockerContainerConfig = handleMethodAttributes(method, classDockerContainerConfig);
 
-        dockerController = new DockerController(methodContainerConfig);
-        dockerController.createContainer(methodContainerConfig);
+        dockerController = new DockerController(methodDockerContainerConfig);
+        dockerController.createContainer(methodDockerContainerConfig);
 
         if (!method.isAnnotationPresent(CreateOnly.class)) {
             dockerController.startContainer();
@@ -126,7 +127,7 @@ class DockerAnnotationHandler {
     }
 
     @AfterMethod
-    void afterEachTest(Method method) {
+    void afterEachTest(Method method) throws DockerException, InterruptedException {
         if (dockerController.isRunning()) {
             dockerController.stopContainer();
         }

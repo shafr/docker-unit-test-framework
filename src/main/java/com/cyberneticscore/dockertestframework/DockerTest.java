@@ -1,30 +1,30 @@
 package com.cyberneticscore.dockertestframework;
 
-import com.github.dockerjava.api.command.InspectContainerResponse.ContainerState;
-import com.github.dockerjava.core.command.WaitContainerResultCallback;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.LogStream;
+import com.spotify.docker.client.exceptions.DockerException;
+import com.spotify.docker.client.messages.ContainerState;
 import lombok.extern.log4j.Log4j;
-
-import java.util.concurrent.TimeUnit;
 
 @Log4j
 public class DockerTest extends DockerAnnotationHandler {
-    public String getLog(int timeoutInMs) throws InterruptedException {
-        LogCollectorCallback logContainerResultCallback = new LogCollectorCallback();
+    public String getLog(int timeoutInMs) throws InterruptedException, DockerException {
 
-        dockerController.dockerClient.logContainerCmd(dockerController.getContainerId())
-                .withStdOut(true).withStdErr(true)
-                .withTailAll()
-                .exec(logContainerResultCallback).awaitCompletion();
+        final String logs;
+        try (LogStream stream = dockerController.dockerClient.logs(
+                dockerController.getContainerId(),
+                DockerClient.LogsParam.stdout(),
+                DockerClient.LogsParam.stderr())) {
+            logs = stream.readFully();
+        }
 
-        logContainerResultCallback.awaitCompletion(timeoutInMs, TimeUnit.MILLISECONDS);
-
-        return logContainerResultCallback.toString();
+        return logs;
     }
 
-    public boolean waitForContainerToExit(int timeoutInMs) {
+    public boolean waitForContainerToExit(int timeoutInMs) throws DockerException, InterruptedException {
         while (timeoutInMs > 0) {
-            ContainerState state = dockerController.dockerClient.inspectContainerCmd(dockerController.getContainerId()).exec().getState();
-            if (!state.getRunning()){
+            ContainerState state = dockerController.dockerClient.inspectContainer(dockerController.getContainerId()).state();
+            if (!state.running()) {
                 LOGGER.info("Container is not running");
                 return true;
             }
@@ -42,10 +42,9 @@ public class DockerTest extends DockerAnnotationHandler {
 
     }
 
-    public int getExitCode(int timeoutInMs) {
-        return dockerController.dockerClient.waitContainerCmd(dockerController.getContainerId())
-                .exec(new WaitContainerResultCallback())
-                .awaitStatusCode(timeoutInMs, TimeUnit.MILLISECONDS);
+    public int getExitCode(int timeoutInMs) throws DockerException, InterruptedException {
+        return dockerController.dockerClient.waitContainer(dockerController.getContainerId()).statusCode();
+        //TODO - TIMEOUT is needed here
     }
 
 }
