@@ -6,7 +6,6 @@ import com.spotify.docker.client.exceptions.ConflictException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
-import com.spotify.docker.client.messages.ContainerInfo;
 import lombok.extern.log4j.Log4j;
 
 /**
@@ -110,9 +109,9 @@ class DockerController {
     }
 
 
-    protected ContainerInfo inspectContainer() {
+    protected ContainerConfig inspectContainer() {
         try {
-            return dockerClient.inspectContainer(containerId);
+            return dockerClient.inspectContainer(containerId).config();
         } catch (DockerException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex) {
