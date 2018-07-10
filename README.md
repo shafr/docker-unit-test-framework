@@ -45,6 +45,6 @@ See [Annotation tests][test-cases-link] for examples.
 
 * If you are working on Windows - remember that you can delegate images handling to any Docker-compatible Linux machine (By setting `DockerHost` env property ).
 
-[java-api-wiki]: https://github.com/docker-java/docker-java/wiki
-[docker-java]: https://github.com/docker-java/docker-java
+[java-api-wiki]: https://github.com/spotify/docker-client/blob/master/docs/user_manual.md
+[docker-java]: https://github.com/spotify/docker-client
 [test-cases-link]: https://github.com/shafr/Docker-Unit-Test-Framework/tree/master/src/test/java/com/cyberneticscore/dockertestframework
