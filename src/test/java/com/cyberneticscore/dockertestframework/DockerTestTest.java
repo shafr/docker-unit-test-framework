@@ -10,8 +10,11 @@ import org.testng.annotations.Test;
 public class DockerTestTest extends DockerTest{
 
     @Test
-    public void testExecuteContainerCommand() {
-
+    @EntryPoint("/bin/ping")
+    @CommandLineArgument({"google.com", "-w", "2"})
+    public void testExecuteContainerCommand() throws DockerException, InterruptedException {
+        String execResult = executeInsideContainer("cat", "/etc/os-release");
+        Assert.assertTrue(execResult.contains("Alpine Linux"));
     }
 
     @Test
