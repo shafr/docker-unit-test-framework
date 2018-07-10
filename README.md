@@ -7,7 +7,7 @@
 __Note that at this point the project is in Proof-of-concept state, so everything can/would be changed.__
 
 # Docker images testing with Java + TestNg.
-__TLDR: This is merely wrapper around [Docker java plugin][docker-java]` & TestNg Basic attributes.__
+__TLDR: This is merely wrapper around [Docker java plugin][docker-java] & TestNg Basic attributes.__
 
 I was looking for any solution on how to test my Docker images (mostly for application servers), but I was not able to find one.
 
@@ -34,6 +34,7 @@ See [Docker-java][docker-java] compatibility list. Personally for me works on bo
 | String getLog(int timeoutInMs)                  | returns log before timeout occurs       |
 | boolean waitForContainerToExit(int timeoutInMs) | retuns true if container is not running |
 | int getExitCode(int timeoutInMs)                | returns exit code                       |
+| String executeInsideContainer(String... cmds    | returns logs from execution             |
 
 ## How to Use / Examples of attributes:
 See [Annotation tests][test-cases-link] for examples.
