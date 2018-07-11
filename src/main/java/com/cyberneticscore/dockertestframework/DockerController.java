@@ -1,15 +1,11 @@
 package com.cyberneticscore.dockertestframework;
 
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.DockerCmdExecFactory;
-import com.github.dockerjava.api.command.InspectContainerResponse;
-import com.github.dockerjava.api.exception.ConflictException;
-import com.github.dockerjava.core.DefaultDockerClientConfig;
-import com.github.dockerjava.core.DockerClientBuilder;
-import com.github.dockerjava.core.DockerClientConfig;
-import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
+import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.exceptions.ConflictException;
+import com.spotify.docker.client.exceptions.DockerException;
+import com.spotify.docker.client.messages.ContainerConfig;
+import com.spotify.docker.client.messages.ContainerCreation;
 import lombok.extern.log4j.Log4j;
 
 /**
@@ -21,68 +17,58 @@ class DockerController {
 
     private String containerId;
 
-    public DockerController(ContainerConfig containerConfig) {
-        init(containerConfig);
+    public DockerController(DockerContainerConfig dockerContainerConfig) {
+        init(dockerContainerConfig);
     }
 
-    private void init(ContainerConfig containerConfig) {
-        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
-                .withDockerHost(containerConfig.getHostPort())
-                .build();
-
-        DockerCmdExecFactory dockerCmdExecFactory = new JerseyDockerCmdExecFactory()
-                .withReadTimeout(10_000)
-                .withConnectTimeout(10_000)
-                .withMaxTotalConnections(100)
-                .withMaxPerRouteConnections(100);
-
-        dockerClient = DockerClientBuilder.getInstance(config)
-                .withDockerCmdExecFactory(dockerCmdExecFactory)
+    private void init(DockerContainerConfig dockerContainerConfig) {
+        dockerClient = DefaultDockerClient
+                .builder()
+                .uri(dockerContainerConfig.getHostPort())
+                .connectTimeoutMillis(10_000)
+                .readTimeoutMillis(30_000)
+                .connectionPoolSize(100)
                 .build();
     }
 
-    void createContainer(ContainerConfig containerConfig) {
-        CreateContainerCmd container = dockerClient
-                .createContainerCmd(containerConfig.getImage());
+    void createContainer(DockerContainerConfig dockerContainerConfig) throws DockerException, InterruptedException {
+        final ContainerConfig.Builder builder = ContainerConfig.builder()
+//                .hostConfig(dockerContainerConfig.)
+                .image(dockerContainerConfig.getImage());
 
-        if (!containerConfig.getEntryPoint().isEmpty()) {
-            container.withEntrypoint(containerConfig.getEntryPoint());
+        if (!dockerContainerConfig.getEntryPoint().isEmpty()) {
+            builder.entrypoint(dockerContainerConfig.getEntryPoint());
         }
 
-        if (!containerConfig.getEnvironmentProperties().isEmpty()) {
-            container.withEnv(containerConfig.getEnvironmentProperties());
+        if (!dockerContainerConfig.getEnvironmentProperties().isEmpty()) {
+            builder.env(dockerContainerConfig.getEnvironmentProperties());
         }
 
-        if (!containerConfig.getCommandLineArguments().isEmpty()) {
-            container.withCmd(containerConfig.getCommandLineArguments());
+        if (!dockerContainerConfig.getCommandLineArguments().isEmpty()) {
+            builder.cmd(dockerContainerConfig.getCommandLineArguments());
         }
 
-//        if (!containerConfig.getVolumes().isEmpty()){
-//            container=container.withVolumesFrom(containerConfig.getVolumes());
+//        if (!dockerContainerConfig.getVolumes().isEmpty()){
+//            container=container.withVolumesFrom(dockerContainerConfig.getVolumes());
 ////            Volume volume = new Volume("");
 //
 ////            container.withVolumesFrom()
 //       }
 
+        final ContainerCreation creation = dockerClient.createContainer(builder.build());
 
-        CreateContainerResponse exec = container.exec();
-
-        if (null != exec.getWarnings() && exec.getWarnings().length > 0) {
-            LOGGER.warn(exec.getWarnings());
-        }
-
-        this.containerId = exec.getId();
+        this.containerId = creation.id();
     }
 
-    void startContainer() {
+    void startContainer() throws DockerException, InterruptedException {
         LOGGER.debug("Container Starting: " + this.containerId);
 
-        dockerClient.startContainerCmd(this.containerId).exec();
+        dockerClient.startContainer(this.containerId);
     }
 
-    Boolean isRunning() {
+    Boolean isRunning() throws DockerException, InterruptedException {
 
-        Boolean running = dockerClient.inspectContainerCmd(containerId).exec().getState().getRunning();
+        Boolean running = dockerClient.inspectContainer(containerId).state().running();
 
         LOGGER.debug("Container isRunning? = " + running + "  :" + this.containerId);
 
@@ -90,19 +76,19 @@ class DockerController {
     }
 
 
-    void stopContainer() {
+    void stopContainer() throws DockerException, InterruptedException {
         if (isRunning()) {
             LOGGER.info("Trying to stop ID: " + containerId);
 
             try {
 
-                dockerClient.killContainerCmd(containerId).exec();
+                dockerClient.killContainer(containerId);
             } catch (ConflictException ex) {
                 LOGGER.warn(ex);
             }
         }
 
-        Boolean dead = dockerClient.inspectContainerCmd(containerId).exec().getState().getDead();
+        Boolean dead = dockerClient.inspectContainer(containerId).state().oomKilled();
 
         if (dead) {
             LOGGER.debug("Container " + containerId + " is DEAD!");
@@ -112,20 +98,30 @@ class DockerController {
     }
 
     void removeContainer() {
-        dockerClient.removeContainerCmd(containerId).withForce(true).exec();
-
-        LOGGER.debug("Container " + containerId + " is removed!");
+        try {
+            dockerClient.removeContainer(containerId, DockerClient.RemoveContainerParam.forceKill());
+            LOGGER.debug("Container " + containerId + " is removed!");
+        } catch (DockerException ex) {
+            ex.printStackTrace();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 
 
-    protected InspectContainerResponse inspectContainer() {
-        return dockerClient.inspectContainerCmd(containerId).exec();
+    protected ContainerConfig inspectContainer() {
+        try {
+            return dockerClient.inspectContainer(containerId).config();
+        } catch (DockerException ex) {
+            ex.printStackTrace();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
     }
 
     public String getContainerId() {
         return containerId;
     }
-
-
-
 }

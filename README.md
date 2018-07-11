@@ -34,6 +34,7 @@ See [Docker-java][docker-java] compatibility list. Personally for me works on bo
 | String getLog(int timeoutInMs)                  | returns log before timeout occurs       |
 | boolean waitForContainerToExit(int timeoutInMs) | retuns true if container is not running |
 | int getExitCode(int timeoutInMs)                | returns exit code                       |
+| String executeInsideContainer(String... cmds    | returns logs from execution             |
 
 ## How to Use / Examples of attributes:
 See [Annotation tests][test-cases-link] for examples.
@@ -45,6 +46,6 @@ See [Annotation tests][test-cases-link] for examples.
 
 * If you are working on Windows - remember that you can delegate images handling to any Docker-compatible Linux machine (By setting `DockerHost` env property ).
 
-[java-api-wiki]: https://github.com/docker-java/docker-java/wiki
-[docker-java]: https://github.com/docker-java/docker-java
+[java-api-wiki]: https://github.com/spotify/docker-client/blob/master/docs/user_manual.md
+[docker-java]: https://github.com/spotify/docker-client
 [test-cases-link]: https://github.com/shafr/Docker-Unit-Test-Framework/tree/master/src/test/java/com/cyberneticscore/dockertestframework
