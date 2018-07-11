@@ -30,7 +30,7 @@ public class DockerTestTest extends DockerTest{
     @EntryPoint("/bin/ping")
     @CommandLineArgument({"google.com", "-w", "2"})
     public void testWaitForContainerToExit() throws DockerException, InterruptedException {
-        boolean stopped = waitForContainerToExit(4000);
+        boolean stopped = waitForContainerToExit(10_000);
         Assert.assertTrue(stopped);
     }
 

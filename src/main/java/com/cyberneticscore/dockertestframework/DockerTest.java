@@ -42,18 +42,20 @@ public class DockerTest extends DockerAnnotationHandler  {
         return logs;
     }
 
-    public boolean waitForContainerToExit(int timeoutInMs) throws DockerException, InterruptedException {
-        while (timeoutInMs > 0) {
+    public boolean waitForContainerToExit(final int timeoutInMs) throws DockerException, InterruptedException {
+        //TODO - find lambda or some universal method for this timed operations
+        int waitTime = 0;
+        while (timeoutInMs > waitTime) {
             ContainerState state = dockerController.dockerClient.inspectContainer(dockerController.getContainerId()).state();
             if (!state.running()) {
-                LOGGER.info("Container is not running");
+                LOGGER.debug("Container is not running, wait time: " + waitTime);
                 return true;
             }
 
-            timeoutInMs -= 1000;
+            waitTime += 100;
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 LOGGER.error(ex);
             }
