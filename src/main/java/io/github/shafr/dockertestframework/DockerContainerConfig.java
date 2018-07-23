@@ -1,4 +1,4 @@
-package com.cyberneticscore.dockertestframework;
+package io.github.shafr.dockertestframework;
 
 import lombok.Data;
 

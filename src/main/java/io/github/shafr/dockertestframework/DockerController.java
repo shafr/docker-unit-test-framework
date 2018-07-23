@@ -1,4 +1,4 @@
-package com.cyberneticscore.dockertestframework;
+package io.github.shafr.dockertestframework;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;

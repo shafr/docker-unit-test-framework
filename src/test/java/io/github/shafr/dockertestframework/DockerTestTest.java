@@ -1,7 +1,7 @@
-package com.cyberneticscore.dockertestframework;
+package io.github.shafr.dockertestframework;
 
-import com.cyberneticscore.dockertestframework.annotations.*;
 import com.spotify.docker.client.exceptions.DockerException;
+import io.github.shafr.dockertestframework.annotations.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
