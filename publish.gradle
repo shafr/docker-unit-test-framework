@@ -1,0 +1,138 @@
+// USED using this guide:
+// http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/
+
+['java', 'signing', 'maven-publish'].each {
+    apply plugin: it
+}
+
+group 'io.github.shafr'
+version '0.1.0'
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    compile 'com.spotify:docker-client:8.11.7'
+
+    compile group: 'org.testng', name: 'testng', version: '6.14.3'
+    testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.14'
+}
+
+
+task javadocJar(type: Jar, dependsOn: javadoc) { // (1)
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+ext {
+    pomFilePath = "${project.projectDir}/tmp/pom.xml"
+    pomFile = file(pomFilePath)
+}
+
+configurations {
+    pom
+}
+
+artifacts {
+    archives jar
+    archives sourceJar
+    archives javadocJar
+    if (pomFile.exists()) {
+        pom pomFile
+    }
+}
+
+task signJars(type: Sign, dependsOn: [jar, javadocJar, sourceJar]) {
+    sign configurations.archives
+}
+
+task signPom(type: Sign) {
+    sign configurations.pom
+}
+
+if (project.ext.pomFile.exists()) {
+    task preparePublication(dependsOn: [signJars, signPom])
+} else {
+    task preparePublication(dependsOn: signJars)
+}
+
+def getSignatureFiles = {
+    def allFiles = project.tasks.signJars.signatureFiles.collect { it }
+    def signedSources = allFiles.find { it.name.contains('-sources') }
+    def signedJavadoc = allFiles.find { it.name.contains('-javadoc') }
+    def signedJar = (allFiles - [signedSources, signedJavadoc])[0]
+    return [
+            [archive: signedSources, classifier: 'sources', extension: 'jar.asc'],
+            [archive: signedJavadoc, classifier: 'javadoc', extension: 'jar.asc'],
+            [archive: signedJar, classifier: null, extension: 'jar.asc']
+    ]
+}
+
+def getPomSignature = {
+    return project.tasks.signPom.signatureFiles.collect { it }[0]
+}
+publishing {
+    publications {
+        gpgJars(MavenPublication) {
+            getSignatureFiles().each { signature ->
+                artifact(signature.archive) {
+                    classifier = signature.classifier
+                    extension = signature.extension
+                }
+            }
+        }
+        if (project.ext.pomFile.exists()) {
+            gpgPom(MavenPublication) {
+                artifact(getPomSignature()) {
+                    classifier = null
+                    extension = 'pom.asc'
+                }
+            }
+        }
+        jar(MavenPublication) {
+            from components.java
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name POM_PROJECT_NAME
+                    description POM_DESCRIPTION
+                    url POM_PROJECT_URL
+                    scm {
+                        url POM_SCM_URL
+                        connection POM_SCM_CONNECTION
+                        developerConnection POM_SCM_DEVELOPER_CONNECTION
+                    }
+                    licenses {
+                        license {
+                            name POM_LICENSE
+                            url POM_LICENSE_URL
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id POM_DEVELOPER_ID
+                            name POM_DEVELOPER_NAME
+                            email POM_DEVELOPER_EMAIL
+                        }
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "file:/${project.projectDir}/build/4publishing"
+        }
+    }
+}
