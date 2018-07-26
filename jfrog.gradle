@@ -1,0 +1,110 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+}
+
+plugins {
+    id "java"
+    id "maven-publish"
+    id "com.jfrog.bintray" version "1.8.4"
+}
+
+apply from: 'build.gradle'
+
+version = PROJECT_VERSION
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc.failOnError = false
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name POM_LICENSE
+            url POM_LICENSE_URL
+            distribution 'repo'
+        }
+    }
+    developers {
+        developer {
+            id POM_DEVELOPER_ID
+            name POM_DEVELOPER_NAME
+            email POM_DEVELOPER_EMAIL
+        }
+    }
+
+    scm {
+        url POM_SCM_URL
+        connection POM_SCM_CONNECTION
+        developerConnection POM_SCM_DEVELOPER_CONNECTION
+    }
+}
+
+
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId 'io.github.shafr'
+            artifactId 'docker-unit-test-framework'
+            version PROJECT_VERSION
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', POM_DESCRIPTION)
+                root.appendNode('name', POM_PROJECT_NAME)
+                root.appendNode('url', POM_PROJECT_URL)
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = bintrayuser
+    key = bintraykey
+    publications = ['mavenPublication']
+
+    pkg {
+        repo = 'io.github.shafr'
+        name = 'docker-unit-test-framework'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/shafr/docker-unit-test-framework'
+        userOrg = 'shafr'
+        version {
+            name = PROJECT_VERSION
+            desc = PROJECT_VERSION
+            released  = new Date()
+//            TODO - check proper tags.
+        }
+    }
+
+}
