@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
-class DockerAnnotationHandler {
+public class DockerAnnotationHandler {
     private DockerContainerConfig classDockerContainerConfig;
     protected DockerController dockerController;
 
@@ -114,8 +114,8 @@ class DockerAnnotationHandler {
         return methodContainerConfg;
     }
 
-    @BeforeMethod
-    void beforeEachTest(Method method) throws DockerException, InterruptedException {
+    @BeforeMethod(alwaysRun = true)
+    protected void beforeEachTest(Method method) throws DockerException, InterruptedException {
         DockerContainerConfig methodDockerContainerConfig = handleMethodAttributes(method, classDockerContainerConfig);
 
         dockerController = new DockerController(methodDockerContainerConfig);
@@ -126,8 +126,8 @@ class DockerAnnotationHandler {
         }
     }
 
-    @AfterMethod
-    void afterEachTest(Method method) throws DockerException, InterruptedException {
+    @AfterMethod(alwaysRun = true)
+    protected void afterEachTest(Method method) throws DockerException, InterruptedException {
         if (dockerController.isRunning()) {
             dockerController.stopContainer();
         }
