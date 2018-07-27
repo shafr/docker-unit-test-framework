@@ -3,6 +3,7 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-121934843-1/Docker-Unit-Test-Framework)](https://github.com/shafr/Docker-Unit-Test-Framework)
 [![Codacy Quality](https://api.codacy.com/project/badge/Grade/5ab3407c0ae149fda98c1fc360fe7d7b)](https://www.codacy.com/app/shafr/Docker-Unit-Test-Framework?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=shafr/Docker-Unit-Test-Framework&amp;utm_campaign=Badge_Grade)
 [![Codacy Coverage](https://api.codacy.com/project/badge/Coverage/5ab3407c0ae149fda98c1fc360fe7d7b)](https://www.codacy.com/app/shafr/Docker-Unit-Test-Framework?utm_source=github.com&utm_medium=referral&utm_content=shafr/Docker-Unit-Test-Framework&utm_campaign=Badge_Coverage)
+[ ![Download](https://api.bintray.com/packages/shafr/io.github.shafr/docker-unit-test-framework/images/download.svg?version=0.1.2) ](https://bintray.com/shafr/io.github.shafr/docker-unit-test-framework/0.1.2/link)
 
 __Note that at this point the project is in Proof-of-concept state, so everything can/would be changed.__
 
