@@ -1,7 +1,9 @@
 package io.github.shafr.dockertestframework;
 
 import com.spotify.docker.client.exceptions.DockerException;
+import com.spotify.docker.client.exceptions.DockerRequestException;
 import io.github.shafr.dockertestframework.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -9,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
+@Slf4j
 public class DockerAnnotationHandler {
     private DockerContainerConfig classDockerContainerConfig;
     protected DockerController dockerController;
@@ -129,7 +132,14 @@ public class DockerAnnotationHandler {
     @AfterMethod(alwaysRun = true)
     protected void afterEachTest(Method method) throws DockerException, InterruptedException {
         if (dockerController.isRunning()) {
-            dockerController.stopContainer();
+            try {
+                dockerController.stopContainer();
+            } catch (DockerRequestException ex){
+                //Sometimes container dies seconds after the isRunning check was done.
+                if (dockerController.isRunning()) {
+                    throw new DockerException(ex);
+                }
+            }
         }
 
         if (!method.isAnnotationPresent(KeepContainer.class)) {
