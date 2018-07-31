@@ -199,21 +199,10 @@ public class DockerTest extends DockerAnnotationHandler {
         for (String untrimmedLine : logFile.split("\\r?\\n")) {
             String line = untrimmedLine.trim();
 
-            if (line.startsWith("at ")) {
+            if (line.startsWith("at ") || line.startsWith("Caused by:")) {
                 if (startedError) {
                     currentStackTrace.add(line);
                 }
-                continue;
-            }
-
-            if (line.startsWith("Caused by:")) {
-                if (startedError) {
-                    currentStackTrace.add(line);
-                }
-                continue;
-            }
-
-            if (line.equals("")){
                 continue;
             }
 
