@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 @DockerHost()
 @Image("alpine")
-public class DockerTestTest extends DockerTest{
+public class DockerTestTest extends DockerTest {
 
     @Test
     @EntryPoint("/bin/ping")
@@ -21,8 +21,8 @@ public class DockerTestTest extends DockerTest{
     @EntryPoint("/bin/cat")
     @CommandLineArgument("/etc/os-release")
     @KeepContainer
-    public void testGetLogs() throws InterruptedException, DockerException {
-        String logs = getLog(3000);
+    public void testGetContainerLogs() throws InterruptedException, DockerException {
+        String logs = getContainerLog();
         Assert.assertTrue(logs.contains("Alpine Linux"));
     }
 
@@ -55,4 +55,30 @@ public class DockerTestTest extends DockerTest{
     public void testGetExitCodeShouldFail() throws DockerException, InterruptedException {
         getExitCode(2000);
     }
+
+    @Test
+    @EntryPoint("/usr/bin/tail")
+    @CommandLineArgument({"-f", "/dev/null"})
+    public void testGetFileContents() throws InterruptedException, DockerException {
+        String logs = getFileContents("/etc/os-release");
+        Assert.assertTrue(logs.contains("Alpine Linux"));
+    }
+
+    @Test
+    @EntryPoint("/usr/bin/tail")
+    @CommandLineArgument({"-f", "/dev/null"})
+    public void testWaitForContainerLogLineTimeout() throws DockerException, InterruptedException {
+       Assert.assertFalse(waitForContainerLogLine("Hello", 5000));
+    }
+
+
+    @Test
+    @EntryPoint("/bin/cat")
+    @CommandLineArgument("/etc/os-release")
+    @KeepContainer
+    public void testWaitForContainerLogLine() throws DockerException, InterruptedException {
+        Assert.assertTrue(waitForContainerLogLine("Alpine Linux", 5000));
+    }
+
+
 }
