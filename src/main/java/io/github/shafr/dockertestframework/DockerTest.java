@@ -9,6 +9,9 @@ import com.spotify.docker.client.messages.ExecCreation;
 import com.spotify.docker.client.messages.TopResults;
 import lombok.extern.log4j.Log4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.spotify.docker.client.DockerClient.LogsParam;
 
 @Log4j
@@ -187,4 +190,67 @@ public class DockerTest extends DockerAnnotationHandler {
 
         //TODO - TIMEOUT is needed here
     }
+
+    protected List<String> scanForExceptions(String logFile) {
+        List<String> stackTraces = new ArrayList<>();
+
+        ArrayList<String> currentStackTrace = new ArrayList<>();
+        boolean startedError = false;
+        for (String untrimmedLine : logFile.split("\\r?\\n")) {
+            String line = untrimmedLine.trim();
+
+            if (line.startsWith("at ")) {
+                if (startedError) {
+                    currentStackTrace.add(line);
+                }
+                continue;
+            }
+
+            if (line.startsWith("Caused by:")) {
+                if (startedError) {
+                    currentStackTrace.add(line);
+                }
+                continue;
+            }
+
+            if (line.equals("")){
+                continue;
+            }
+
+            if (line.contains("Exception:")) {
+                if (!startedError) {
+                    startedError = true;
+                    currentStackTrace.add(line);
+                }
+                continue;
+            }
+
+            //none of masks is found
+            if (startedError) {
+                startedError = false;
+
+                if (!currentStackTrace.isEmpty()) {
+                    stackTraces.add(addLines(currentStackTrace));
+                    currentStackTrace = new ArrayList<>();
+                }
+            }
+
+        }
+
+        if (!currentStackTrace.isEmpty()) {
+            stackTraces.add(addLines(currentStackTrace));
+        }
+
+        return stackTraces;
+    }
+
+    private String addLines(ArrayList<String> lines) {
+        StringBuilder sb = new StringBuilder();
+
+        for (String line : lines) {
+            sb.append(line).append("\r\n");
+        }
+        return sb.toString();
+    }
+
 }

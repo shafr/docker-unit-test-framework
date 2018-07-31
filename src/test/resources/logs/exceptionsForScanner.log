@@ -1,0 +1,46 @@
+Some dummy text before
+no empty lines at
+
+java.lang.ClassNotFoundException: com.something.something
+        at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:481)
+        at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:397)
+        at org.eclipse.osgi.framework.internal.core.BundleLoadr.findClass(BundleLoader.java:385)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:386)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+
+Sometest at sometext
+7/31/18 07:47:18.365 AM UTC [INFO] [main] Some time and date here
+
+at at at at
+Caused by:
+
+SECOND STACKTRACE BELOW:
+7/31/18 07:47:38.340 AM UTC [ERROR] [pool-18-thread-5] [org.springframework.scheduling.support.TaskUtils$LoggingErrorHandler] Unexpected error occurred in scheduled task.
+java.lang.NullPointerException:
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+        at java.lang.reflect.Method.invoke(Unknown Source)
+        at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:65)
+        at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+        at java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+        at java.util.concurrent.FutureTask.runAndReset(Unknown Source)
+        at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(Unknown Source)
+        at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.lang.Thread.run(Unknown Source)
+
+THIRT STACKTRACE:
+7/31/18 07:47:40.282 AM UTC [ERROR] [main] [org.springframework.web.servlet.DispatcherServlet] Context initialization failed
+org.springframework.beans.factory.BeanCreationException: java.lang.IllegalStateException: SomethingSomething
+        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:136)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:408)
+Caused by: java.lang.IllegalStateException: Some terrible exception!
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+        at java.lang.reflect.Method.invoke(Unknown Source)
+extra test which noone care abouts
