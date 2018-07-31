@@ -18,7 +18,7 @@ public class DockerTest extends DockerAnnotationHandler {
      *
      * @return Info about the container
      */
-    public ContainerConfig inspectContainer() {
+    protected ContainerConfig inspectContainer() {
         return dockerController.inspectContainer();
     }
 
@@ -29,7 +29,7 @@ public class DockerTest extends DockerAnnotationHandler {
      * @throws DockerException      if a server error occurred (500)
      * @throws InterruptedException If the thread is interrupted
      */
-    public TopResults getRunningProcesses(String psArguments) throws DockerException, InterruptedException {
+    protected TopResults getRunningProcesses(String psArguments) throws DockerException, InterruptedException {
         return dockerController.dockerClient.topContainer(dockerController.getContainerId(), psArguments);
     }
 
@@ -41,7 +41,7 @@ public class DockerTest extends DockerAnnotationHandler {
      * @throws InterruptedException If the thread is interrupted
      * @throws DockerException      if a server error occurred (500)
      */
-    public String getFileContents(String filePath) throws InterruptedException, DockerException {
+    protected String getFileContents(String filePath) throws InterruptedException, DockerException {
         ExecCreation execCreation = dockerController.dockerClient.execCreate(
                 dockerController.getContainerId(),
                 new String[]{"cat", filePath},
@@ -66,7 +66,7 @@ public class DockerTest extends DockerAnnotationHandler {
      * @throws DockerException      if a server error occurred (500)
      * @throws InterruptedException If the thread is interrupted
      */
-    public boolean waitForContainerLogLine(String textToMatch, final int timeoutInMs) throws DockerException, InterruptedException {
+    protected boolean waitForContainerLogLine(String textToMatch, final int timeoutInMs) throws DockerException, InterruptedException {
         //TODO - find lambda or some universal method for this timed operations
         int waitTime = 0;
         String logs;
@@ -102,7 +102,7 @@ public class DockerTest extends DockerAnnotationHandler {
      * @throws InterruptedException if a server error occurred (500)
      * @throws DockerException      If the thread is interrupted
      */
-    public String executeInsideContainer(String... cmd) throws InterruptedException, DockerException {
+    protected String executeInsideContainer(String... cmd) throws InterruptedException, DockerException {
         ExecCreation execCreation = dockerController.dockerClient.execCreate(
                 dockerController.getContainerId(),
                 cmd,
@@ -128,7 +128,7 @@ public class DockerTest extends DockerAnnotationHandler {
      * @throws InterruptedException If the thread is interrupted
      * @throws DockerException      if a server error occurred (500)
      */
-    public String getContainerLog() throws InterruptedException, DockerException {
+    protected String getContainerLog() throws InterruptedException, DockerException {
 
         final String logs;
         try (LogStream stream = dockerController.dockerClient.logs(
@@ -149,7 +149,7 @@ public class DockerTest extends DockerAnnotationHandler {
      * @throws DockerException      if a server error occurred (500)
      * @throws InterruptedException If the thread is interrupted
      */
-    public boolean waitForContainerToExit(final int timeoutInMs) throws DockerException, InterruptedException {
+    protected boolean waitForContainerToExit(final int timeoutInMs) throws DockerException, InterruptedException {
         //TODO - find lambda or some universal method for this timed operations
         int waitTime = 0;
         while (timeoutInMs > waitTime) {
@@ -180,7 +180,7 @@ public class DockerTest extends DockerAnnotationHandler {
      * @throws DockerException      if a server error occurred (500)
      * @throws InterruptedException If the thread is interrupted
      */
-    public int getExitCode(int timeoutInMs) throws DockerException, InterruptedException {
+    protected int getExitCode(int timeoutInMs) throws DockerException, InterruptedException {
         //TODO - implement own waiting
 //        dockerController.dockerClient.waitContainer(dockerController.getContainerId()).
         return dockerController.dockerClient.waitContainer(dockerController.getContainerId()).statusCode();
