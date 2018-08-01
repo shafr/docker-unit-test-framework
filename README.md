@@ -38,7 +38,7 @@ See [Docker-java][docker-java] compatibility list. Personally for me works on bo
 | String executeInsideContainer(String... cmds    | returns logs from execution             |
 
 ## How to Use / Examples of attributes:
-See [Annotation tests][test-cases-link] for examples.
+See [Tests][test-cases-link] or for examples.
 
 ## Hints
 * `dockerClient` field is available to you for accessing different container/host info from tests. 
@@ -49,4 +49,4 @@ See [Annotation tests][test-cases-link] for examples.
 
 [java-api-wiki]: https://github.com/spotify/docker-client/blob/master/docs/user_manual.md
 [docker-java]: https://github.com/spotify/docker-client
-[test-cases-link]: https://github.com/shafr/Docker-Unit-Test-Framework/tree/master/src/test/java/com/cyberneticscore/dockertestframework
+[test-cases-link]: https://github.com/shafr/docker-unit-test-framework/tree/master/src/test/java/io/github/shafr
