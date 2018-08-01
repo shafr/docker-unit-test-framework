@@ -23,6 +23,7 @@ The Idea behind this tool - is to give you opportunity to test Docker images `as
 | Environment         | X      | X     |           | One or more attributes allowded, format `"key=value"``   |
 | CommandLineArgument | X      | X     |           | Array from command and arguments                         |
 | KeepContainer       | X      |       |           | Does not remove container after test (for investigation) |
+| PullLatest          |        | X     |           | Pulls latest test before running test. __Note, if no tag is set, pulls all images!__  |
 | ~~Volume~~          | X      | X     |           | TBD                                                      |
 | ~~Port~~            | X      | X     |           | TBD                                                      |
 
