@@ -66,6 +66,10 @@ class DockerController {
         dockerClient.startContainer(this.containerId);
     }
 
+    void pullImage(String imageName) throws DockerException, InterruptedException {
+        dockerClient.pull(imageName);
+    }
+
     Boolean isRunning() throws DockerException, InterruptedException {
 
         Boolean running = dockerClient.inspectContainer(containerId).state().running();

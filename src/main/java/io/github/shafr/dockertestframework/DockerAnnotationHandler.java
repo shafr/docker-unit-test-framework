@@ -122,6 +122,12 @@ public class DockerAnnotationHandler {
         DockerContainerConfig methodDockerContainerConfig = handleMethodAttributes(method, classDockerContainerConfig);
 
         dockerController = new DockerController(methodDockerContainerConfig);
+
+        if (this.getClass().isAnnotationPresent(PullLatest.class)) {
+            LOGGER.info("Pulling image: " + methodDockerContainerConfig.getImage());
+            dockerController.pullImage(methodDockerContainerConfig.getImage());
+        }
+
         dockerController.createContainer(methodDockerContainerConfig);
 
         if (!method.isAnnotationPresent(CreateOnly.class)) {

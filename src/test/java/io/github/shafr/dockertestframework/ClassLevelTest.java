@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 @Environment("key=value")
 @Environment("key2=value2")
 @CommandLineArgument({"ls", "-ltrh"})
+@PullLatest
 public class ClassLevelTest extends DockerTest{
     @Test
     public void tstHost(){
@@ -41,5 +42,12 @@ public class ClassLevelTest extends DockerTest{
         String[] actual = dockerController.inspectContainer().cmd().toArray(new String[0]);
         Assert.assertEquals(actual[0], "ls");
         Assert.assertEquals(actual[1], "-ltrh");
+    }
+
+    @Test
+    public void testPullLatest(){
+        //TODO - not sure how to test - need to find the best way
+        String imageName = dockerController.inspectContainer().image();
+        System.out.println(imageName);
     }
 }
