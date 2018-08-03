@@ -10,6 +10,7 @@ plugins {
     id "java"
     id "maven-publish"
     id "com.jfrog.bintray" version "1.8.4"
+    id "com.jfrog.artifactory" version "4.7.5"
 }
 
 apply from: 'build.gradle'
@@ -75,7 +76,7 @@ publishing {
             }
             groupId 'io.github.shafr'
             artifactId 'docker-unit-test-framework'
-            version PROJECT_VERSION
+            version = PROJECT_VERSION + (Boolean.valueOf(System.getProperty("snapshot")) ? "-SNAPSHOT" : "")
 
             pom.withXml {
                 def root = asNode()
@@ -107,4 +108,24 @@ bintray {
         }
     }
 
+}
+
+artifactory {
+    contextUrl = 'http://oss.jfrog.org'
+    publish {
+        repository {
+            repoKey = 'oss-snapshot-local'
+            username = bintrayuser
+            password = bintraykey
+        }
+        defaults {
+            publications('mavenPublication')
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+    resolve {
+        repoKey = 'jcenter'
+    }
+    clientConfig.info.setBuildNumber(PROJECT_VERSION+"-SNAPSHOT")
 }
