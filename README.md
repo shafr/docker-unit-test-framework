@@ -5,6 +5,8 @@
 [![Codacy Coverage](https://api.codacy.com/project/badge/Coverage/5ab3407c0ae149fda98c1fc360fe7d7b)](https://www.codacy.com/app/shafr/Docker-Unit-Test-Framework?utm_source=github.com&utm_medium=referral&utm_content=shafr/Docker-Unit-Test-Framework&utm_campaign=Badge_Coverage)
 [ ![Download](https://api.bintray.com/packages/shafr/io.github.shafr/docker-unit-test-framework/images/download.svg?version=0.1.5) ](https://bintray.com/shafr/io.github.shafr/docker-unit-test-framework/0.1.5/link)
 
+[ ![Known Vulnerabilities](https://snyk.io/test/github/shafr/docker-unit-test-framework/badge.svg)](https://snyk.io/test/github/shafr/docker-unit-test-framework)
+
 __Note that at this point the project is in Proof-of-concept state, so everything can/would be changed.__
 
 # Docker images testing with Java + TestNg.
